@@ -47,6 +47,7 @@ local function LocalInjuriedPerson(pedLocation)
         job = { "ambulance" } -- jobs that will get the alerts
     })
 end
+exports('LocalInjuriedPerson', LocalInjuriedPerson)
 ```
 
 sv_dispatchcodes;
