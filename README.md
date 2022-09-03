@@ -21,7 +21,7 @@ future plans:
 
 > Joint AI calls (EMS, Police, Fire),
 
->ps-dispatch configuration
+#ps-dispatch configuration
 
 cl_events.lua;
 ```
