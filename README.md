@@ -1,6 +1,9 @@
 # prp-medicalai
 Toggleable AI calls for EMS!
 
+Video
+>https://streamable.com/p7c8xi
+
 Uses:
 >qb-radialmenu,
 
