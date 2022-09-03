@@ -94,7 +94,7 @@ function spawnDownedLocal()
 end
 
 RegisterNetEvent('prp-medicalai:client:revivePed', function()    
-    hasitem = QBCore.Functions.HasItem('bandage')
+    hasitem = QBCore.Functions.HasItem(Config.bandageItem)
     if hasitem == true then
         ExecuteCommand('e cpr')
         QBCore.Functions.Progressbar('ped_revive', 'Reviving local', 5000, false, true, { -- Name | Label | Time | useWhileDead | canCancel
@@ -106,6 +106,8 @@ RegisterNetEvent('prp-medicalai:client:revivePed', function()
             ExecuteCommand('e c')
             pedSapawned = false
             Wait(500)
+            TriggerServerEvent("QBCore:Server:RemoveItem", Config.bandageItem, 1)
+            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[Config.bandageItem], "remove")
             ClearPedTasksImmediately(downedPed)
             SetPedMovementClipset(downedPed, "move_m@injured", 1 )
             TaskGoStraightToCoord(downedPed, 0,0,0,5,10000,0)

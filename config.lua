@@ -1,6 +1,7 @@
 Config = Config or {}
 
 Config.emsJob = 'ambulance'
+Config.bandageItem = 'bandage'
 Config.jobCoolDown = 150000
 Config.payMin = 500
 Config.payMax = 1000
