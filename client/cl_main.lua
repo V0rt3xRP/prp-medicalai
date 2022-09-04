@@ -4,7 +4,7 @@ local onJob, onCoolDown, pedSapawned = false, false, false
 
 function jobCallDown()
     onCoolDown = true
-    Wait(Config.jobCoolDown)
+    Wait(Config.jobCoolDown * 60000) -- Use 60000 to set in minutes in Config
     onCoolDown = false
     onJob = false
     TriggerEvent('prp-medicalai:client:startmission')
@@ -12,27 +12,9 @@ end
 
 function randomiseLocation()
     local random = math.random(1,10)
-    if random == 1 then
-        pedLocation = Config.downedPedLocation["1"]
-    elseif random == 2 then
-        pedLocation = Config.downedPedLocation["2"]
-    elseif random == 3 then
-        pedLocation = Config.downedPedLocation["3"]
-    elseif random == 4 then
-        pedLocation = Config.downedPedLocation["4"]
-    elseif random == 5 then
-        pedLocation = Config.downedPedLocation["5"]
-    elseif random == 6 then
-        pedLocation = Config.downedPedLocation["6"]
-    elseif random == 7 then
-        pedLocation = Config.downedPedLocation["7"]
-    elseif random == 8 then
-        pedLocation = Config.downedPedLocation["8"]
-    elseif random == 9 then
-        pedLocation = Config.downedPedLocation["9"]
-    elseif random == 10 then
-        pedLocation = Config.downedPedLocation["10"]
-    end
+
+    pedLocation = Config.downedPedLocation[random]
+
     Wait(500)
     exports['ps-dispatch']:LocalInjuriedPerson(pedLocation)
     SetNewWaypoint(pedLocation)
@@ -59,15 +41,15 @@ end)
 function loadAnimDict(dict)
     while (not HasAnimDictLoaded(dict)) do
         RequestAnimDict(dict)
-        Citizen.Wait(5)
+        Wait(5)
     end
 end
 
 function spawnDownedLocal()
     local i = math.random(1, #Config.PedPool)
-    RequestModel(Config.PedPool[i]) while 
-    not HasModelLoaded(Config.PedPool[i]) do 
-        Wait(0) 
+    RequestModel(Config.PedPool[i]) while
+    not HasModelLoaded(Config.PedPool[i]) do
+        Wait(0)
     end
     downedPed = CreatePed(0, Config.PedPool[i], pedLocation.x, pedLocation.y, pedLocation.z, false, false)
     pedSapawned = true
@@ -93,11 +75,11 @@ function spawnDownedLocal()
     end
 end
 
-RegisterNetEvent('prp-medicalai:client:revivePed', function()    
+RegisterNetEvent('prp-medicalai:client:revivePed', function()
     hasitem = QBCore.Functions.HasItem(Config.bandageItem)
     if hasitem == true then
         ExecuteCommand('e cpr')
-        QBCore.Functions.Progressbar('ped_revive', 'Reviving local', 5000, false, true, { -- Name | Label | Time | useWhileDead | canCancel
+        QBCore.Functions.Progressbar('ped_revive', 'Reviving Local...', 5000, false, true, { -- Name | Label | Time | useWhileDead | canCancel
             disableMovement = false,
             disableCarMovement = false,
             disableMouse = false,
@@ -111,10 +93,11 @@ RegisterNetEvent('prp-medicalai:client:revivePed', function()
             ClearPedTasksImmediately(downedPed)
             SetPedMovementClipset(downedPed, "move_m@injured", 1 )
             TaskGoStraightToCoord(downedPed, 0,0,0,5,10000,0)
-            local paycheck = math.random(Config.payMin, Config.payMax)
-            TriggerServerEvent('prp-medicalai:server:giveCash', paycheck)
-            QBCore.Functions.Notify('You received $' ..paycheck.. ' for helping. Wait for your next call!', 'success', 7500)
-            jobCallDown()
+            QBCore.Functions.TriggerCallback('prp-medicalai:server:giveCash', function(check) -- Trigger callback for pay (More Secure)
+                if check then
+                    jobCallDown()
+                end
+            end)
         end, function() -- Play When Cancel
             ExecuteCommand('e c')
         end)
@@ -122,4 +105,3 @@ RegisterNetEvent('prp-medicalai:client:revivePed', function()
         QBCore.Functions.Notify('You have no bandages on you!', 'error', 7500)
     end
 end)
-
