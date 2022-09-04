@@ -2,7 +2,7 @@ Config = Config or {}
 
 Config.emsJob = 'ambulance'
 Config.bandageItem = 'bandage'
-Config.jobCoolDown = 150000
+Config.jobCoolDown = math.random(3, 10) -- Set in minutes
 Config.payMin = 500
 Config.payMax = 1000
 Config.Paycash = true -- true = cash / false = bank 
