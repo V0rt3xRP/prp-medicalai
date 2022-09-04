@@ -1,11 +1,25 @@
 QBCore = exports['qb-core']:GetCoreObject()
 
-RegisterNetEvent('prp-medicalai:server:giveCash', function(paycheck)
+-- Callback for Money
+QBCore.Functions.CreateCallback('prp-medicalai:server:giveCash', function(source, cb)
     local src = source
-    local ply = QBCore.Functions.GetPlayer(src)
+    local Player = QBCore.Functions.GetPlayer(source)
+    local paycheck = math.random(Config.payMin, Config.payMax)
+
     if Config.Paycash == true then
-        ply.Functions.AddMoney("cash", paycheck)
+        if Player.Functions.AddMoney("cash", paycheck) then
+            TriggerClientEvent('QBCore:Notify', src, 'You received $' ..paycheck.. ' for helping. Wait for your next call!', 'success', 7500)
+            cb(true)
+        else
+            cb(false)
+        end
     else
-        ply.Functions.AddMoney("bank", paycheck)
+        if Player.Functions.AddMoney("bank", paycheck) then
+            TriggerClientEvent('QBCore:Notify', src, 'You received $' ..paycheck.. ' for helping. Wait for your next call!', 'success', 7500)
+            cb(true)
+        else
+            cb(false)
+        end
     end
+
 end)
